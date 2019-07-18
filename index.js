@@ -1,3 +1,4 @@
+const antsRouter = require('./antsRouter.js');
 var bodyParser = require("body-parser");
 const express = require('express'); //express framework to have a higher level of methods
 const app = express(); //assign app variable the express class/method
@@ -7,15 +8,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const server = http.createServer(app);//create a server
 
-
 app.use(express.static('pages'));
-
-//port = process.env.PORT || 3000;
-
-//app.listen(port);
-
-
-//console.log('todo list RESTful API server started on: ' + port);
 
 /**********************websocket setup**************************************************************************************/
 //var expressWs = require('express-ws')(app,server);
@@ -43,54 +36,6 @@ function heartbeat() {
   this.isAlive = true;
 }
 
-
-function processCommand(input)
-{
-	var commandToSend ="";
-			var strCmd = input;//d.toString().trim();
-			var numOfSteps =strCmd.substring(1);
-			console.log(`*number of steps from user: ${numOfSteps} *`)
-			if (numOfSteps == "")
-				{	
-					numOfSteps="0"
-				}
-				console.log("numOfSteps: " +numOfSteps);
-			switch(strCmd.substring(0,1))
-			{
-				case 'f':
-							commandToSend ="AC_0_GF"
-					break;		
-					
-				case 'b':
-						commandToSend="AC_0_GB"
-						break;
-
-				case 'r':
-						commandToSend="AC_0_TR"
-						break;
-
-				case 'l':
-						commandToSend="AC_0_TL"
-						break;
-				case '<':
-						commandToSend="AC_0_BTL"
-						break;
-				case '>':
-						commandToSend="AC_0_BTR"
-						break;
-
-				case 's':
-						commandToSend="AC_0_S"
-						break;
-		
-
-			}
-
-			commandToSend = commandToSend.replace('0',numOfSteps);
-			console.log("Sending " + commandToSend + " To the antBot");
-			return commandToSend;
-
-}
 
 
 wss.on('connection',function(ws,req){
@@ -146,7 +91,7 @@ stdin.addListener("data", function(d) {
 		}
 		else
 		{
-			var commandToSend= processCommand(strCmd);
+			var commandToSend= antsRouter.processCommand(strCmd);
 			commandsArr.push(commandToSend);
 			console.log(commandToSend);
 		}	
