@@ -1,21 +1,97 @@
-const antsRouter = require('./antsRouter.js');
+//const antsRouter = require('./antsRouter.js');
 var bodyParser = require("body-parser");
 const express = require('express'); //express framework to have a higher level of methods
 const app = express(); //assign app variable the express class/method
+const Joi = require('joi');
 var http = require('http');
 var path = require("path");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+//app.use(expres.json());
 const server = http.createServer(app);//create a server
 
 app.use(express.static('pages'));
+
+//require('./app/routes/ants.routes.js')(app);
+
+
 
 /**********************websocket setup**************************************************************************************/
 //var expressWs = require('express-ws')(app,server);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
-var clientsArr;
+
+//, registrationTime :
+var antsClientsArr = [
+	{id: 1, Name: 'ant1', antcCommandsArr: [
+		{command:'f5'},
+		{command:'r'},
+		{command:'f3'},
+	]},
+	{id: 2, Name: 'ant2', antcCommandsArr: [
+		{command:'f2'},
+		{command:'l'},
+		{command:'f4'},
+	]}
+];
+
 var commandsArr = [];
+
+//var commandsArrFrom
+
+app.get('/api/ants/', (req, res) => {
+	res.send(antsClientsArr);
+});
+
+app.get('/api/ants/:id', (req, res)=>{
+	const ant = antsClientsArr.find(a=> a.id === parseInt(req.params.id));
+	if (!ant)
+		res.status(404).send("The ant with the given ID was not found.")		
+	res.send(ant);
+});
+
+
+app.post('/api/ants', (req,res)=> {
+
+	const schema = {
+		name: Joi.string().min(3).required()
+	};
+
+	const resultOfJoi = Joi.validate(req.body, schema);
+
+	if (resultOfJoi.error) {
+		res.status(400).send(resultOfJoi.error.details[0].message);
+		return;
+	}
+
+	const ant = {
+		id: antsClientsArr.length + 1, 
+		Name: req.body.Name
+	};
+	antsClientsArr.push(ant);
+	res.send(ant);
+});
+
+
+app.put('/api/ants/:id', (req, res) => {
+
+	const schema = {
+		name: Joi.string().min(3).required()
+	};
+	const ant = antsClientsArr.find(a=> a.id === parseInt(req.params.id));
+	if (!ant)
+		res.status(404).send("The ant with the given ID was not found.")		
+	const resultOfJoi = Joi.validate(req.body, schema);
+
+	if (resultOfJoi.error) {
+		res.status(400).send(resultOfJoi.error.details[0].message);
+		return;
+	
+	ant.antcCommandsArr.push(req.body.antcCommandsArr);
+	res.send(ant);
+});
+
+
 
 //when browser sends get request, send html file to browser. viewed at http://localhost:30000
 app.get('/cmds', function(req, res) {
