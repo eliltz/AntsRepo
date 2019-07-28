@@ -23,16 +23,10 @@ const wss = new WebSocket.Server({ server });
 
 //, registrationTime :
 var antsClientsArr = [
-	{id: 1, Name: 'ant1', antcCommandsArr: [
-		{command:'f5'},
-		{command:'r'},
-		{command:'f3'},
-	]},
-	{id: 2, Name: 'ant2', antcCommandsArr: [
-		{command:'f2'},
-		{command:'l'},
-		{command:'f4'},
-	]}
+	{id: 1, name: 'ant1', antCommandsArr: [ 'f5','r','f3']
+		},
+	{id: 2, name: 'ant2', antCommandsArr: ['f2','l','f4']		
+	}
 ];
 
 var commandsArr = [];
@@ -54,7 +48,8 @@ app.get('/api/ants/:id', (req, res)=>{
 app.post('/api/ants', (req,res)=> {
 
 	const schema = {
-		name: Joi.string().min(3).required()
+		name: Joi.string().min(3).required(),
+		antCommandsArr : Joi.array().items(Joi.string().regex(/([fblr])\w+/))
 	};
 
 	const resultOfJoi = Joi.validate(req.body, schema);
@@ -66,7 +61,8 @@ app.post('/api/ants', (req,res)=> {
 
 	const ant = {
 		id: antsClientsArr.length + 1, 
-		Name: req.body.Name
+		name: req.body.name,
+		antCommandsArr : req.body.antCommandsArr
 	};
 	antsClientsArr.push(ant);
 	res.send(ant);
@@ -76,7 +72,8 @@ app.post('/api/ants', (req,res)=> {
 app.put('/api/ants/:id', (req, res) => {
 
 	const schema = {
-		name: Joi.string().min(3).required()
+		//name: Joi.string().min(3).required()
+			antCommandsArr : Joi.array().items(Joi.string().regex(/[rf\d]/))
 	};
 	const ant = antsClientsArr.find(a=> a.id === parseInt(req.params.id));
 	if (!ant)
@@ -86,10 +83,22 @@ app.put('/api/ants/:id', (req, res) => {
 	if (resultOfJoi.error) {
 		res.status(400).send(resultOfJoi.error.details[0].message);
 		return;
+	}
 	
-	ant.antcCommandsArr.push(req.body.antcCommandsArr);
+	ant.antCommandsArr = req.body.antCommandsArr;
 	res.send(ant);
 });
+
+
+// app.delete('/api/ants/:id', (req, res) => {
+
+// 	const ant = antsClientsArr.find(a=> a.id === parseInt(req.params.id));
+// 	if (!ant)
+// 		res.status(404).send("The ant with the given ID was not found.")		
+	
+// 	ant.antCommandsArr = req.body.antCommandsArr;
+// 	res.send(ant);
+// });
 
 
 
