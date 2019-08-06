@@ -1,7 +1,7 @@
-//const antsRouter = require('./antsRouter.js');
+const antsCmdRouter = require('./antsCmdRouter.js');
 var bodyParser = require("body-parser");
-const express = require('express'); //express framework to have a higher level of methods
-const app = express(); //assign app variable the express class/method
+const express = require('express'); 
+const app = express(); 
 const Joi = require('joi');
 var http = require('http');
 var path = require("path");
@@ -16,7 +16,6 @@ app.use(express.static('pages'));
 
 
 
-/**********************websocket setup**************************************************************************************/
 //var expressWs = require('express-ws')(app,server);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
@@ -86,7 +85,16 @@ app.put('/api/ants/:id', (req, res) => {
 	}
 	
 	ant.antCommandsArr = req.body.antCommandsArr;
+
+
 	res.send(ant);
+	 
+	//************* For demo purposes 06.08.19 *******************************/
+	let antCmdToSend = ant.antCommandsArr[0];
+	antsCmdRouter.processCommand(ant.antCommandsArr[0]);
+	console.log(`Sent ${antCmdToSend} to the ant`,)
+
+	//************************************************************************/
 });
 
 
@@ -153,6 +161,12 @@ wss.on('connection',function(ws,req){
 	});
 
 	
+	const ant = {
+		id: antsClientsArr.length + 1, 
+		name: req.body.name,
+		antCommandsArr : req.body.antCommandsArr
+	};
+	
 	ws.send("hi new client!");
 	console.log("new client connected");
 });
@@ -176,7 +190,7 @@ stdin.addListener("data", function(d) {
 		}
 		else
 		{
-			var commandToSend= antsRouter.processCommand(strCmd);
+			var commandToSend= antsCmdRouter.processCommand(strCmd);
 			commandsArr.push(commandToSend);
 			console.log(commandToSend);
 		}	
