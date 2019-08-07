@@ -70,9 +70,10 @@ app.post('/api/ants', (req,res)=> {
 
 app.put('/api/ants/:id', (req, res) => {
 
+try {
 	const schema = {
 		//name: Joi.string().min(3).required()
-			antCommandsArr : Joi.array().items(Joi.string().regex(/[rf\d]/))
+			antCommandsArr : Joi.array().items(Joi.string().regex(/[rsf<>\d]/))
 	};
 	const ant = antsClientsArr.find(a=> a.id === parseInt(req.params.id));
 	if (!ant)
@@ -95,6 +96,12 @@ app.put('/api/ants/:id', (req, res) => {
 	console.log(`Sent ${antCmdToSend} to the ant`,)
 
 	//************************************************************************/
+		
+} catch (error) {
+		res.status(500).send(error);
+		console.log(`Error! -> ${error} `,)
+}
+
 });
 
 
@@ -171,7 +178,13 @@ wss.on('connection',function(ws,req){
 	console.log("new client connected");
 });
 
-console.log("Starting server on port 3000");
+
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+
+console.log(`Starting server on port 3000 --> ${dateTime}`);
 server.listen(3000);
 console.log("Type Command:")
 console.log("f/ b/ r/ l/ tr/ tl/ s--> 0-9")
