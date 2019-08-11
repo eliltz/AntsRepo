@@ -10,9 +10,9 @@ Commands to send. singular Ant API 06.08.19
 
 --> "l2"  --> will tell the ant to turn left and will ignore the number. the number still needs to be there.
 
---> "<2"  --> will tell the ant to turn backwards and right and will ignore the number. the number still needs to be there.
+--> "<"  --> will tell the ant to turn backwards and right and will ignore the number. the number still needs to be there.
 
---> ">3"  --> will tell the ant to turn backwards and left and will ignore the number. the number still needs to be there.
+--> ">"  --> will tell the ant to turn backwards and left and will ignore the number. the number still needs to be there.
 
 --> "s2"  --> will tell the ant to stop
 
