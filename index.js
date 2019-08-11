@@ -195,7 +195,7 @@ stdin.addListener("data", function(d) {
 		var strCmd = d.toString().trim();
 		if	(strCmd == "cmds") 
 		{
-			console.log("list of commands waiting to be sent:")
+			console.log("list of commands awaiting to be sent:")
 			commandsArr.forEach(function(element, index) {
 			console.log('%d: %s', index +1, element);
 				
