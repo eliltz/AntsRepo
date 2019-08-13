@@ -95,9 +95,20 @@ try {
 	let antCmdToSend = ant.antCommandsArr[0];
 	var commandToSendToPhysicalAnt = antsCmdRouter.processCommand(ant.antCommandsArr[0]);
 	console.log(`Will send ${antCmdToSend} to the ant`,)
-	console.log(`Command To Send To Physical Ant: ${commandToSendToPhysicalAnt} to the ant`,)
+	
 	//wss.clients[0].
-	clientsArr[req.params.id-1].send(commandToSendToPhysicalAnt);
+	let idOfAntToSend = req.params.id;
+	try {
+		if (clientsArr.length >= idOfAntToSend)
+		{
+			console.log(`Command To Send To Physical Ant: ${commandToSendToPhysicalAnt} to the ant`,)
+			clientsArr[idOfAntToSend-1].send(commandToSendToPhysicalAnt);	
+		}
+	} catch (error) {
+		console.log(error);
+	}
+
+	
 	//   wss.clients.forEach(function each(client) {
 	// 	  console.log(`Client -> ${client}`);
 	//   });
