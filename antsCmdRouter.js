@@ -2,14 +2,14 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
-console.log(path.parse(__filename));
-console.log(`total uptime of this machine: ${os.uptime}` );
+// console.log(path.parse(__filename));
+// console.log(`total uptime of this machine: ${os.uptime}` );
 
 
-fs.readdir('./',function(err,files){
-	if(err) console.log(`Error while reading dir: ${err}`)
-	else console.log('Result',files);
-});
+// fs.readdir('./',function(err,files){
+// 	if(err) console.log(`Error while reading dir: ${err}`)
+// 	else console.log('Result',files);
+// });
 
 
 

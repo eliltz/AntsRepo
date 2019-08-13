@@ -20,6 +20,7 @@ app.use(express.static('pages'));
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
 
+var clientsArr=[];
 //, registrationTime :
 var antsClientsArr = [
 	{id: 1, name: 'ant1', antCommandsArr: [ 'f5','r','f3']
@@ -92,9 +93,14 @@ try {
 	 
 	//************* For demo purposes 06.08.19 *******************************/
 	let antCmdToSend = ant.antCommandsArr[0];
-	antsCmdRouter.processCommand(ant.antCommandsArr[0]);
-	console.log(`Sent ${antCmdToSend} to the ant`,)
-
+	var commandToSendToPhysicalAnt = antsCmdRouter.processCommand(ant.antCommandsArr[0]);
+	console.log(`Will send ${antCmdToSend} to the ant`,)
+	console.log(`Command To Send To Physical Ant: ${commandToSendToPhysicalAnt} to the ant`,)
+	//wss.clients[0].
+	clientsArr[req.params.id-1].send(commandToSendToPhysicalAnt);
+	//   wss.clients.forEach(function each(client) {
+	// 	  console.log(`Client -> ${client}`);
+	//   });
 	//************************************************************************/
 		
 } catch (error) {
@@ -127,9 +133,6 @@ app.get('/cmds', function(req, res) {
 	}
 });
 
-app.get("/url", (req, res, next) => {
-	res.json(["Tony","Lisa","Michael","Ginger","Food"]);
-   });
 
 function noop() {}
 function heartbeat() {
@@ -139,9 +142,11 @@ function heartbeat() {
 
 
 wss.on('connection',function(ws,req){
-	//clientsArr.push(ws);
-	console.log("Type Command:")
-	console.log("f/ b/ r/ l/ tr/ tl/ s--> 0-9")
+	clientsArr.push(ws);
+	console.log("")
+	console.log(`Number of connected clients: ${wss.clients.size}`);
+	console.log("Either Type Command or get it by the API:")
+	//console.log("f/ b/ r/ l/ </ >/ s--> 0-9")
 	var stdin = process.openStdin();
 	stdin.addListener("data", function(d) {
 		// note:  d is an object, and when converted to a string it will
@@ -168,10 +173,15 @@ wss.on('connection',function(ws,req){
 	});
 
 	
+	// const ant = {
+	// 	id: antsClientsArr.length + 1, 
+	// 	name: req.body.name,
+	// 	antCommandsArr : req.body.antCommandsArr
+	// };
 	const ant = {
 		id: antsClientsArr.length + 1, 
-		name: req.body.name,
-		antCommandsArr : req.body.antCommandsArr
+		connection: ws,
+		//antCommandsArr : req.body.antCommandsArr
 	};
 	
 	ws.send("hi new client!");
@@ -186,8 +196,8 @@ var dateTime = date+' '+time;
 
 console.log(`Starting server on port 3000 --> ${dateTime}`);
 server.listen(3000);
-console.log("Type Command:")
-console.log("f/ b/ r/ l/ tr/ tl/ s--> 0-9")
+//console.log("Type Command:")
+//console.log("f/ b/ r/ l/ tr/ tl/ s--> 0-9")
 var stdin = process.openStdin();
 stdin.addListener("data", function(d) {
 	console.log("you entered: [" + 
