@@ -16,6 +16,15 @@ const fs = require('fs');
 function processCommand(input)
 {
 	var commandToSend ="";
+	if (input.toUpperCase().startsWith("CF")) {
+		var factor = input.substring(2);
+		console.log(`Got factor: ${factor}`)
+		commandToSend= `AF_CF_${factor}`;//"AC_CF_1.20"
+		console.log(`Sending command to change factor: ${commandToSend}`);
+		return commandToSend;
+	}
+	else
+	{
 			var strCmd = input;//d.toString().trim();
 			var numOfSteps =strCmd.substring(1);
 			console.log(`*number of steps from user: ${numOfSteps} *`)
@@ -51,9 +60,10 @@ function processCommand(input)
 				case 's':
 						commandToSend="AC_0_S"
 						break;
-		
+
 
 			}
+		}
 
 			commandToSend = commandToSend.replace('0',numOfSteps);
 			console.log("Sending " + commandToSend + " To the antBot");

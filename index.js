@@ -166,7 +166,7 @@ wss.on('connection',function(ws,req){
 		console.log("you entered: [" + 
 			d.toString().trim() + "]");
 			var strCmd = d.toString().trim();
-			var commandToSend= processCommand(strCmd);
+			var commandToSend= antsCmdRouter.processCommand(strCmd);
 			console.log(commandToSend);
 		ws.send(commandToSend);
 	  });
@@ -180,6 +180,7 @@ wss.on('connection',function(ws,req){
 	
 
 	ws.on('close', function(){
+		//clientsArr.pop(ws);
 		console.log(`lost one client ${getCurrentDate()}`);
 	});
 
