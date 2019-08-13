@@ -169,32 +169,23 @@ wss.on('connection',function(ws,req){
 	
 
 	ws.on('close', function(){
-		console.log("lost one client");
+		console.log(`lost one client ${getCurrentDate()}`);
 	});
 
 	
-	// const ant = {
-	// 	id: antsClientsArr.length + 1, 
-	// 	name: req.body.name,
-	// 	antCommandsArr : req.body.antCommandsArr
-	// };
 	const ant = {
 		id: antsClientsArr.length + 1, 
 		connection: ws,
 		//antCommandsArr : req.body.antCommandsArr
 	};
 	
-	ws.send("hi new client!");
-	console.log("new client connected");
+	ws.send(`Hi new client!, you are client number ${wss.clients.size}`);
+	console.log("");
+	console.log(`New client connected ${getCurrentDate()}`);
 });
 
 
-var today = new Date();
-var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-var dateTime = date+' '+time;
-
-console.log(`Starting server on port 3000 --> ${dateTime}`);
+console.log(`Starting server on port 3000 --> ${getCurrentDate()}`);
 server.listen(3000);
 //console.log("Type Command:")
 //console.log("f/ b/ r/ l/ tr/ tl/ s--> 0-9")
@@ -218,3 +209,12 @@ stdin.addListener("data", function(d) {
 			console.log(commandToSend);
 		}	
   });
+
+
+function getCurrentDate(){
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+return dateTime
+  }
