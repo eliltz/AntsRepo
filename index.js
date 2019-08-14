@@ -15,6 +15,26 @@ app.use(express.static('pages'));
 //require('./app/routes/ants.routes.js')(app);
 
 
+// ===========
+var payloads = [];
+var ant = 1;
+payloads.push({id: ant, x: 2, y: 30, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entry', battery:100, type:'scout'});  //1
+payloads.push({id: ant, x: 2, y: 29, angle: 0, ll:'open', ul:'open', rl:'open', bl:'open', battery:90, type:'scout'});  //2
+payloads.push({id: ant, x: 2, y: 28, angle: 0, ll:'open', ul:'open', rl:'open', bl:'open', battery:80, type:'scout'});  //3
+payloads.push({id: ant, x: 2, y: 27, angle: 90, ll:'open', ul:'open', rl:'open', bl:'open', battery:70, type:'scout'});  //4
+payloads.push({id: ant, x: 2, y: 27, angle: 90, ll:'open', ul:'open', rl:'open', bl:'open', battery:70, type:'scout'});  //5
+payloads.push({id: ant, x: 3, y: 27, angle: 90, ll:'open', ul:'open', rl:'open', bl:'open', battery:60, type:'scout'}); //6
+//payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+
+const dgram = require('dgram');
+const protobuf = require("protobufjs");
+var init = false;
+var TelemetryMessage;
+initProtoBuf();
+var counter = -1;
+// ===========
+
+
 
 //var expressWs = require('express-ws')(app,server);
 const WebSocket = require('ws');
@@ -173,6 +193,10 @@ wss.on('connection',function(ws,req){
 	ws.on('message',function(message){
 		//const msg = JSON.parse(message); //TODO: what if the message is not a JSON?...
 		console.log("this is a message from client: " + message);
+		if(message.toLowerCase().includes('finish')) {
+			console.log('sending to server');
+			reportCompletedToUi();
+		}
 		//ws.send('GF');
 		
 		//ws.send("Server: got message: '" + message + "'"); //send to client where message is from
@@ -230,3 +254,46 @@ var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds(
 var dateTime = date+' '+time;
 return dateTime
   }
+
+// ===============================
+
+function initProtoBuf(){
+  protobuf.load("D:\\Ants\\realAnt\\AntsRepo\\telemetryMessage.proto", function(err, root) {
+    if (err){
+		console.log(err);
+		throw err;
+	}
+
+	TelemetryMessage = root.lookupType("telemetrypackage.TelemetryMessage");
+	reportCompletedToUi(); // ant start point
+  });
+};
+
+function sendTelemetry(payload){
+	const errMsg = TelemetryMessage.verify(payload);
+	if (errMsg){
+		console.log('Error:' + errMsg);
+		return;
+	}
+	else{
+		const message = TelemetryMessage.create(payload);
+		const buffer = TelemetryMessage.encode(message).finish();
+
+	   const client = dgram.createSocket('udp4');
+	   client.send(buffer, 41848, 'localhost', (err) => {
+		   if (err != null) console.log('Err: ' + err);
+		   client.close();
+	   });
+	}
+}
+
+function reportCompletedToUi(){
+	//if(!init){
+	//	init = true;
+	//	initProtoBuf();
+	//	console.log(TelemetryMessage);
+	//}
+	counter++;
+	console.log(payloads[counter]);
+	sendTelemetry(payloads[counter]);
+}

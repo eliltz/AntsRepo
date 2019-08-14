@@ -4,7 +4,7 @@ console.log('Trying to create a connection');
 const connection = new WebSocket(url)
  
 connection.onopen = () => {
-  connection.send('Message From Client')
+  connection.send('Finished movement')
 }
  
 connection.onerror = (error) => {
