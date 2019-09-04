@@ -15,6 +15,14 @@ app.use(express.static('pages'));
 //require('./app/routes/ants.routes.js')(app);
 
 
+//for (let key in person)
+	//console.log(key, person[key]);
+	
+// for (let index in antsClientsArr)	
+// 	console.log(index, antsClientsArr[index]);
+
+//for (let antClient of antsClientsArr)
+//	console.log(antClient );
 
 //var expressWs = require('express-ws')(app,server);
 const WebSocket = require('ws');
@@ -157,6 +165,23 @@ wss.on('connection',function(ws,req){
 	console.log("")
 	console.log(`Number of connected clients: ${wss.clients.size}`);
 	console.log("Either Type Command or get it by the API:")
+
+	for (let key in ws){
+	//	console.log(key, ws[key]);
+
+	}
+
+	for (let key of Object.keys(ws)){
+		console.log(key);
+	}
+	
+	// for (let entry of Object.entries(ws)){
+	// 	console.log(entry);
+	// }
+
+	//const circle2 = { ...circle1};
+
+	if('_events' in ws) console.log('_events is in ws');
 	//console.log("f/ b/ r/ l/ </ >/ s--> 0-9")
 	var stdin = process.openStdin();
 	stdin.addListener("data", function(d) {

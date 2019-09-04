@@ -4,11 +4,11 @@ console.log('Trying to create a connection');
 const connection = new WebSocket(url)
  
 connection.onopen = () => {
-  connection.send('Message From Client')
+  connection.send('Hello Server');
 }
  
 connection.onerror = (error) => {
-  console.log(`WebSocket error: ${error}`)
+  console.log(`WebSocket error: ${error}`);
 }
  
 connection.onmessage = (e) => {
