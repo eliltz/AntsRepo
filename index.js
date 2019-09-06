@@ -14,24 +14,7 @@ const server = http.createServer(app);//create a server
 
 app.use(express.static('pages'));
 
-//require('./app/routes/ants.routes.js')(app);
 
-// ===========
-
-<<<<<<< HEAD
-//for (let key in person)
-	//console.log(key, person[key]);
-	
-// for (let index in antsClientsArr)	
-// 	console.log(index, antsClientsArr[index]);
-
-//for (let antClient of antsClientsArr)
-//	console.log(antClient );
-=======
-console.log(fontColor.getfontColor('Reset'));
->>>>>>> 58a91d6898d21740eadc336e431863337359139e
-
-//var expressWs = require('express-ws')(app,server);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
 
@@ -165,15 +148,6 @@ try {
 		console.error(error);
 	}
 
-	// try {
-	// 	if (clientsArr.length >= idOfAntToSend)
-	// 	{
-	// 		console.log(`Command To Send To Physical Ant: ${commandToSendToPhysicalAnt} to the ant`,)
-	// 		clientsArr[idOfAntToSend-1].send(commandToSendToPhysicalAnt);	
-	// 	}
-	// } catch (error) {
-	// 	console.log(error);
-	// }
 		
 } catch (error) {
 		res.status(500).send(error);
@@ -229,33 +203,15 @@ wss.on('connection',function(ws,req){
 	antsRobotsArr.push(tempAnt);
 	//console.log(`Number of connected clients: ${wss.clients.size}`);
 	console.log("New Client is connected.")
+	
 	console.log(`Number of currently connected clients: ${connectedClientsCounter}`);
 	
 	printConnectedAnts();
+	console.log(fontColor.getfontColor('Reset'));
 	console.log("Either Type Command or get it by the API:")
-
-	for (let key in ws){
-	//	console.log(key, ws[key]);
-
-	}
-
-	for (let key of Object.keys(ws)){
-		console.log(key);
-	}
-	
-	// for (let entry of Object.entries(ws)){
-	// 	console.log(entry);
-	// }
-
-	//const circle2 = { ...circle1};
-
-	if('_events' in ws) console.log('_events is in ws');
-	//console.log("f/ b/ r/ l/ </ >/ s--> 0-9")
 	var stdin = process.openStdin();
 	stdin.addListener("data", function(d) {
-		// note:  d is an object, and when converted to a string it will
-		// end with a linefeed.  so we (rather crudely) account for that  
-		// with toString() and then trim() 
+		
 		console.log("you entered: [" + 
 			d.toString().trim() + "]");
 			var strCmd = d.toString().trim();
@@ -336,11 +292,7 @@ function reportFinish(message) {
 		//antCommandsArr : req.body.antCommandsArr
 	};
 	
-	//ws.send(`Hi new client!, you are client number ${wss.clients.size}`);
 	ws.send(`Hi new client!, you are client number ${connectedClientsCounter}`);
-	// console.log(`---->SENDING AID_${tempAnt.id}`);
-	// ws.send(`AID_${tempAnt.id}`);
-	// ws.send(`AC_${tempAnt.id}`);
 	console.log("");
 	console.log(`New client connected ${getCurrentDate()}`);
 	console.log(fontColor.getfontColor('Reset'));

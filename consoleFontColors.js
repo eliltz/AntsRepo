@@ -57,7 +57,14 @@ dict.push({
     key:   'FgCyan',
     value: "\x1b[37m"
 });
-
+dict.push({
+    key:   'BgGreen',
+    value: "\x1b[42m"
+});
+dict.push({
+    key:   'BgWhite',
+    value: "\x1b[47m"
+});
 
 BgBlack = "\x1b[40m"
 BgRed = "\x1b[41m"
