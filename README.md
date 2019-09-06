@@ -16,6 +16,8 @@ In order to test the server and clients do the following:
 
 Now the client is ready to receive commands, In order to send commands via the API use the following:
 
+To call the API you have to of course replace the "localhost" with the ip of the computer running this server
+
 Use GET with this URl--> http://localhost:3000/api/ants/ - > to get the ants currently connected.
 
 		i.e : Get result when two ants are connected before sending any commands: 
