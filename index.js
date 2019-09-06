@@ -52,7 +52,7 @@ var AntRobot = {
 //var commandsArr = [];
 
 app.get('/api/ants/', (req, res) => {	
-	console.log(antsRobotsArr);
+	//console.log(antsRobotsArr);
 	let custResponse =[];
 	antsRobotsArr.forEach(e => { 
 		custResponse.push({id :e.id, name: e.name, antCommandsArr: e.antCommandsArr});
@@ -143,6 +143,13 @@ try {
 			//res.status(200).send(antRobotToSendCommandTo.antCommandsArr);
 			console.info(`Sending ${commandToSendToPhysicalAnt} command To the physical Ant with the requested id (${idOfAntToSend}) -> ${antRobotToSendCommandTo.describe()}`);
 			antRobotToSendCommandTo.wsc.send(commandToSendToPhysicalAnt);
+			
+			try {
+				res.status(200).send(antRobotToSendCommandTo.antCommandsArr);	
+			} catch (error) {
+				console.log(error);
+			}
+			
 		}	
 	} catch (error) {
 		console.error(error);
